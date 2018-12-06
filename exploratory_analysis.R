@@ -30,15 +30,15 @@ for(i in 1:length(files)) {
                           length(strsplit(txt, " ")[[1]])
                         })
   summ_char[[i]]      = summary(tmp_char)
-  hist_char[[i]]      = hist(tmp_char)
   summ_word[[i]]      = summary(tmp_word)
+  hist_char[[i]]      = hist(tmp_char)
   hist_word[[i]]      = hist(tmp_word)
+  line_cnt[[i]]       = length(tmp_file)
+  
   names(summ_char)[i] = files[i]
   names(summ_word)[i] = files[i]
   names(hist_char)[i] = files[i]
   names(hist_word)[i] = files[i]
-  
-  line_cnt[[i]]       = length(tmp_file)
   names(line_cnt)[i]  = files[i]
   
   remove(tmp_file, tmp_char, tmp_word)
