@@ -1,6 +1,6 @@
 # Reference Data
 
-## Profanity (English)
+### Profanity (English)
 
 Data from prof_en.txt was found in the below repo.
 
