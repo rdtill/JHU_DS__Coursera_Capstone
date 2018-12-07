@@ -1,6 +1,16 @@
-#####
-#    installing packages
-#####
+---
+title: 'Milestone Report 1: Exploratory Analysis'
+author: "Ryan Till"
+date: "December 7, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r processing, echo=FALSE, cache=TRUE}
+
 library(NLP)
 library(readr)
 
@@ -24,7 +34,6 @@ hist_char = list()
 hist_word = list()
 line_cont  = list()
 for(i in 1:length(files)) {
-  print(paste('Processing ', files[i], sep = ''))
   
   tmp_file            = read_lines(files[i])
   tmp_char            = sapply(tmp_file, nchar)
@@ -72,7 +81,7 @@ for(i in 1:length(files)) {
   
   remove(tmp_file, tmp_char, tmp_word, tmp_wcnt, tmp_prof)
   
-  if(i == length(files)){print('Processing complete')}
+  #if(i == length(files)){print('Processing complete')}
 }
 
 sumdf_char = rbind(summ_char[[1]], summ_char[[2]], summ_char[[3]])
@@ -83,17 +92,4 @@ rownames(sumdf_word) = files
 blogs = read_lines(files[1])
 prof_blg = blogs[inde_prof$en_US.blogs.txt]
 
-
-
-#####
-# ISSUES:
-#
-#   1   Profanity count only considers one-word profanities.  Need to add code to
-#       consider profanities that are > 1 word.
-#             - profanity filter may be flawed, only returned 'xx' and 'xxx' for the blog entries
-#               that contained profantiy
-#
-#   2   Word count and character count histograms contain outliers that convolude the 
-#       visualization. Need to add code to remove
-#
-#   3   
+```
