@@ -8,6 +8,10 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+#Summary
+
+In this project we will be designing a model that predicts the next word to come in sentence.  For this Milestone Report, we will only be doing some minor exploratory analysis.  The data I'll be using for my project can be downloaded [here](https://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip). The specific files I will be looking at are 'en_US.blogs.txt', 'en_US.news.txt' and 'en_US.twitter.txt' (in the en_US subdirectory). The packages I used to read and analyze the data are 'NLP' and 'reader'.
+
 
 ```{r processing, echo=FALSE, cache=TRUE}
 
@@ -28,68 +32,142 @@ setwd('C:\\Users\\tillr\\Coursera\\Capstone\\final\\en_US')
 files     = dir()
 summ_char = list()
 summ_word = list()
+sdev_char = list()
+sdev_word = list()
 cont_prof = list()
 inde_prof = list()
 hist_char = list()
 hist_word = list()
-line_cont  = list()
+line_cont = list()
+avgw_leng = list()
 for(i in 1:length(files)) {
   
-  tmp_file            = read_lines(files[i])
-  tmp_char            = sapply(tmp_file, nchar)
-  tmp_word            = lapply(tmp_file, FUN = function(txt) {
-                          splt_txt  = strsplit(txt, " ")
-                          list(len  = length(splt_txt[[1]]), 
-                               prof = sum(is.element(prof_en, splt_txt)))
-                        })
-  tmp_wcnt            = sapply(tmp_word, FUN = function(ele) { 
-                          ele$len  
-                        })
-  tmp_prof            = sapply(tmp_word, FUN = function(ele) { 
-                          ele$prof  
-                        })
+  tmp_file = read_lines(files[i])
+  tmp_char = sapply(tmp_file, nchar)
+  tmp_word = lapply(tmp_file, FUN = function(txt) {
+               splt_txt  = strsplit(txt, " ")[[1]]
+               list(len  = length(splt_txt), 
+                    prof = sum(is.element(prof_en, splt_txt)), 
+                    avwl = mean(nchar(splt_txt)))
+             })
+  tmp_wcnt = sapply(tmp_word, FUN = function(ele) { 
+               ele$len  
+             })
+  tmp_prof = sapply(tmp_word, FUN = function(ele) { 
+               ele$prof  
+             })
+  tmp_wlen = sapply(tmp_word, FUN = function(ele) {
+               ele$avwl
+             })
   
-  summ_char[[i]]      = summary(tmp_char)                 #summary of character count per line
-  summ_word[[i]]      = summary(tmp_wcnt)                 #summary of word count per line
-  cont_prof[[i]]      = sum(tmp_prof)                     #total count of profanities in file (ISSUE 1)
-  inde_prof[[i]]      = which(tmp_prof > 0)               #lines that contain profanities by file (ISSUE 1)
+  summ_char[[i]] = summary(tmp_char)                          #summary of character count per line
+  summ_word[[i]] = summary(tmp_wcnt)                          #summary of word count per line
+  sdev_char[[i]] = sd(tmp_char)                               #standard deviation of character count
+  sdev_word[[i]] = sd(tmp_wcnt)                               #standard deviation of word count
+  cont_prof[[i]] = sum(tmp_prof)                              #total count of profanities in file (ISSUE 1)
+  inde_prof[[i]] = which(tmp_prof > 0)                        #lines that contain profanities by file (ISSUE 1)
+  
   if(files[i] != 'en_US.twitter.txt') {                       #histogram of character counts by file (ISSUE 2)
-    hist_char[[i]]      = hist(tmp_char, plot = FALSE,      
-                               breaks = seq(from = 0, 
-                                            to = ceiling(max(tmp_char) / 20) * 20, 
-                                            by = 20))
+    hist_char[[i]] = hist(tmp_char, plot = FALSE,      
+                          breaks = seq(from = 0, 
+                                       to = ceiling(max(tmp_char) / 20) * 20, 
+                                       by = 20))
   } else {
-    hist_char[[i]]      = hist(tmp_char, plot = FALSE)
+    hist_char[[i]] = hist(tmp_char, plot = FALSE)
   }
   if(files[i] != 'en_US.twitter.txt') {                       #histogram of word counts by file (ISSUE 2)
-    hist_word[[i]]      = hist(tmp_wcnt, plot = FALSE,      
-                               breaks = seq(from = 0, 
-                                            to = ceiling(max(tmp_wcnt) / 10) * 10, 
-                                            by = 10))
+    hist_word[[i]] = hist(tmp_wcnt, plot = FALSE,      
+                          breaks = seq(from = 0, 
+                                       to = ceiling(max(tmp_wcnt) / 10) * 10, 
+                                       by = 10))
   } else {
-    hist_word[[i]]      = hist(tmp_wcnt, plot = FALSE)
+    hist_word[[i]] = hist(tmp_wcnt, plot = FALSE)
   }
-  line_cont[[i]]      = length(tmp_file)                  #line count by file
+  
+  line_cont[[i]] = length(tmp_file)                           #line count by file
+  avgw_leng[[i]] = summary(tmp_wlen)                          #summary of average word length by file
   
   names(summ_char)[i] = files[i]
   names(summ_word)[i] = files[i]
+  names(sdev_char)[i] = files[i]
+  names(sdev_word)[i] = files[i]
   names(cont_prof)[i] = files[i]
   names(inde_prof)[i] = files[i]
   names(hist_char)[i] = files[i]
   names(hist_word)[i] = files[i]
   names(line_cont)[i] = files[i]
+  names(avgw_leng)[i] = files[i]
   
   remove(tmp_file, tmp_char, tmp_word, tmp_wcnt, tmp_prof)
   
-  #if(i == length(files)){print('Processing complete')}
 }
 
-sumdf_char = rbind(summ_char[[1]], summ_char[[2]], summ_char[[3]])
-rownames(sumdf_char) = files
-sumdf_word = rbind(summ_word[[1]], summ_word[[2]], summ_word[[3]])
-rownames(sumdf_word) = files
+```
 
-blogs = read_lines(files[1])
-prof_blg = blogs[inde_prof$en_US.blogs.txt]
+#Summary Statistics
 
+Below are some summary statistics about the line, character and word counts for each file.  
+
+**Number of Lines**  
+
+File | Line Count
+------|-----------
+`r files[1]` | `r line_cont[1]`
+`r files[2]` | `r line_cont[2]`
+`r files[3]` | `r line_cont[3]`
+
+**Character Count Summary**
+```{r char_count, echo=FALSE}
+temp = rbind(summ_char$en_US.blogs.txt, summ_char$en_US.news.txt, summ_char$en_US.twitter.txt)
+rownames(temp) = files
+temp = cbind(temp, SD = sdev_char)
+temp
+```
+
+**Word Count Summary**
+```{r word_count, echo=FALSE}
+temp = rbind(summ_word$en_US.blogs.txt, summ_word$en_US.news.txt, summ_word$en_US.twitter.txt)
+rownames(temp) = files
+temp = cbind(temp, SD = sdev_word)
+temp
+```
+
+We can see that in 'en_US.blogs.txt' and 'en_US.news.txt' there are some fairly large outliers. This is evident due to the large difference between the max and 3rd quartile values in their summary for both character and word count.
+
+#Data Visualizations
+
+Here we will attempt to visualize the distribution of both character and word count in each file.  Note that the previously mentioned outliers in 'en_US.blogs.txt' and 'en_US.news.txt' are exclued from these histograms so we can get a cleaner view of the distribution.
+
+```{r blogs_vis, echo=FALSE}
+par(mfrow = c(1, 2))
+plot(hist_char$en_US.blogs.txt, 
+     main = "Blog Character Count", 
+     xlim = c(0, 5*sdev_char$en_US.blogs.txt), 
+     xlab = "Character Count")
+plot(hist_word$en_US.blogs.txt, 
+     main = "Blog Word Count", 
+     xlim = c(0, 5*sdev_word$en_US.blogs.txt), 
+     xlab = "Word Count")
+```
+
+```{r news_vis, echo=FALSE}
+par(mfrow = c(1, 2))
+plot(hist_char$en_US.news.txt, 
+     main = "News Character Count", 
+     xlim = c(0, 5*sdev_char$en_US.news.txt), 
+     xlab = "Character Count")
+plot(hist_word$en_US.news.txt, 
+     main = "News Word Count", 
+     xlim = c(0, 5*sdev_word$en_US.news.txt), 
+     xlab = "Word Count")
+```
+
+```{r twitter_vis, echo=FALSE}
+par(mfrow = c(1, 2))
+plot(hist_char$en_US.twitter.txt, 
+     main = "Tweet Character Count", 
+     xlab = "Character Count")
+plot(hist_word$en_US.twitter.txt, 
+     main = "Tweet Word Count", 
+     xlab = "Word Count")
 ```
