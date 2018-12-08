@@ -136,7 +136,7 @@ We can see that in 'en_US.blogs.txt' and 'en_US.news.txt' there are some fairly 
 
 #Data Visualizations
 
-Here we will attempt to visualize the distribution of both character and word count in each file.  Note that the previously mentioned outliers in 'en_US.blogs.txt' and 'en_US.news.txt' are exclued from these histograms so we can get a cleaner view of the distribution.
+Here we will attempt to visualize the distribution of both character and word count in each file.  Note that the previously mentioned outliers in 'en_US.blogs.txt' and 'en_US.news.txt' are exclued from these histograms so we can get a cleaner view of the distribution. More specifcally, the x-axis only goes up to 5 times the standard deviation of the corresponding data.
 
 ```{r blogs_vis, echo=FALSE}
 par(mfrow = c(1, 2))
@@ -171,3 +171,7 @@ plot(hist_word$en_US.twitter.txt,
      main = "Tweet Word Count", 
      xlab = "Word Count")
 ```
+
+#Conclusion
+
+Now that I'm able to read and work with the data, the next steps are to filter out any profanity and begin developing a prediction algorithm. My initial approach to building the algorithm will be to start gathering data on various ngrams throughout the text, focusing first on 2-word combinations, then moving to 3 and perhaps 4 if my resources allow it. The challenges I forsee with this will be the sheer size of the datasets being used.
