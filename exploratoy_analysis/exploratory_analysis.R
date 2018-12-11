@@ -5,6 +5,8 @@ library(NLP)
 library(readr)
 library(ggplot2)
 
+file_keep <- TRUE
+
 #####
 #    exploratory analysis
 #####
@@ -86,7 +88,13 @@ for(i in 1:length(files)) {
   names(line_cont)[i] = files[i]
   names(avgw_leng)[i] = files[i]
   
-  remove(tmp_file, tmp_char, tmp_word, tmp_wcnt, tmp_prof)
+  if(file_keep) {
+    if(i == 1){blog <- tmp_file}
+    if(i == 2){news <- tmp_file}
+    if(i == 3){twtr <- tmp_file}
+  }
+  
+  remove(tmp_file, tmp_char, tmp_word, tmp_wcnt, tmp_prof, file_keep)
   
   if(i == length(files)){print('Processing complete')}
 }
