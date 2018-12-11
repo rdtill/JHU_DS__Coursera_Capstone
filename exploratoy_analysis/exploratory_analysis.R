@@ -5,6 +5,9 @@ library(NLP)
 library(readr)
 library(ggplot2)
 
+setwd('C:\\Users\\tillr\\Coursera\\Capstone\\project\\exploratoy_analysis')
+source('functions.R')
+
 file_keep <- TRUE
 
 #####
