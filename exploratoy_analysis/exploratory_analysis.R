@@ -60,7 +60,7 @@ for(i in 1:length(files)) {
   cont_prof[[i]] = sum(tmp_prof)                              #total count of profanities in file (ISSUE 1)
   inde_prof[[i]] = which(tmp_prof > 0)                        #lines that contain profanities by file (ISSUE 1)
   
-  if(files[i] != 'en_US.twitter.txt') {                       #histogram of character counts by file (ISSUE 2)
+  if(files[i] != 'en_US.twitter.txt') {                       #histogram of character counts by file
     hist_char[[i]] = hist(tmp_char, plot = FALSE,      
                           breaks = seq(from = 0, 
                                        to = ceiling(max(tmp_char) / 20) * 20, 
@@ -68,7 +68,7 @@ for(i in 1:length(files)) {
   } else {
     hist_char[[i]] = hist(tmp_char, plot = FALSE)
   }
-  if(files[i] != 'en_US.twitter.txt') {                       #histogram of word counts by file (ISSUE 2)
+  if(files[i] != 'en_US.twitter.txt') {                       #histogram of word counts by file
     hist_word[[i]] = hist(tmp_wcnt, plot = FALSE,      
                           breaks = seq(from = 0, 
                                        to = ceiling(max(tmp_wcnt) / 10) * 10, 
@@ -97,21 +97,24 @@ for(i in 1:length(files)) {
     if(i == 3){twtr <- tmp_file}
   }
   
-  remove(tmp_file, tmp_char, tmp_word, tmp_wcnt, tmp_prof, file_keep)
+  remove(tmp_file, tmp_char, tmp_word, tmp_wcnt, tmp_prof)
   
   if(i == length(files)){print('Processing complete')}
 }
 
-#sumdf_char = rbind(summ_char[[1]], summ_char[[2]], summ_char[[3]])
-#ownames(sumdf_char) = files
-#sumdf_word = rbind(summ_word[[1]], summ_word[[2]], summ_word[[3]])
-#rownames(sumdf_word) = files
 
-#blogs = read_lines(files[1])
-#prof_blg = blogs[inde_prof$en_US.blogs.txt]
-#tmp_char = sapply(blogs, nchar)
-#tmp_char = as.vector(tmp_char)
-#p = ggplot() + geom_histogram(data = tmp_char)
+#####
+#    n-gram generation
+#####
+
+#bigrams
+five_perc = sample(1:100, length(blog), replace = TRUE) < 6
+bigrams = list()
+tmp_dat = blog[five_perc]
+for(i in 1:length(tmp_dat)) {
+  bigrams[[i]] = my_ngram(txt = tmp_dat[i], n = 2)
+}
+
 
 #####
 # ISSUES:
@@ -120,8 +123,5 @@ for(i in 1:length(files)) {
 #       consider profanities that are > 1 word.
 #             - profanity filter may be flawed, only returned 'xx' and 'xxx' for the blog entries
 #               that contained profantiy
-#
-#   2   Word count and character count histograms contain outliers that convolude the 
-#       visualization. Need to add code to remove
 #
 #   3   
