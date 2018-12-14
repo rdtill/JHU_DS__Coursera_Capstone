@@ -5,7 +5,7 @@ library(NLP)
 library(readr)
 library(ggplot2)
 
-setwd('C:\\Users\\tillr\\Coursera\\Capstone\\project\\exploratoy_analysis')
+setwd('C:\\Users\\tillr\\Coursera\\Capstone\\project\\functions')
 source('functions.R')
 
 file_keep <- TRUE
@@ -100,19 +100,6 @@ for(i in 1:length(files)) {
   remove(tmp_file, tmp_char, tmp_word, tmp_wcnt, tmp_prof)
   
   if(i == length(files)){print('Processing complete')}
-}
-
-
-#####
-#    n-gram generation
-#####
-
-#bigrams
-five_perc = sample(1:100, length(blog), replace = TRUE) < 6
-bigrams = list()
-tmp_dat = blog[five_perc]
-for(i in 1:length(tmp_dat)) {
-  bigrams[[i]] = my_ngram(txt = tmp_dat[i], n = 2)
 }
 
 
