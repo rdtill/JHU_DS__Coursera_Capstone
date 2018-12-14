@@ -9,9 +9,19 @@ library(NLP)
 #
 #   Args: 
 #     - txt:    a character value
-#     - split:  what character txt is split by
 #     - n:      how many words are used to form the n-gram (1, 2, 3, etc.)
 #
-my_ngram <- function(txt, split, n) {
-  ngrams(strsplit(txt, split)[[1]], n)
+#   Notes:
+#     - the current regular expression used to extract words is listed below.
+#
+#             "[[:alpha:]]*['|-]?[[:alpha:]]*[^ [[:punct:]]]"
+my_ngram <- function(txt, n) {
+  text = str_extract_all(txt, "[[:alpha:]]*['|-]?[[:alpha:]]*[^ [[:punct:]]]", simplify = FALSE)[[1]]
+  ngrams(text, n)
 }
+
+
+
+
+
+
