@@ -59,7 +59,9 @@ for(i in 1:length(files)) {
   
   if(i == length(files)){print('Processing complete')}
 }
-
+setwd('C:\\Users\\tillr\\Coursera\\Capstone\\project\\ngram generation\\ngrams')
+save(bigrams, file = "bigrams.Rdata")
+save(trigrams, file = "trigrams.Rdata")
 
 
 
