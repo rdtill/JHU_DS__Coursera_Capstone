@@ -11,6 +11,8 @@ source('functions.R')
 
 file_keep <- TRUE
 
+set.seed(1234)
+
 #####
 #    ngram generation
 #####
@@ -64,22 +66,7 @@ setwd('C:\\Users\\tillr\\Coursera\\Capstone\\project\\ngram generation\\ngrams')
 save(bigrams, file = "bigrams.Rdata")
 save(trigrams, file = "trigrams.Rdata")
 
-load("bigrams.Rdata")
-bi_blog = lapply(bigrams$en_US.blogs.txt, FUN = function(ele) {
-  if(length(ele) != 0) {
-    for(i in 1:length(ele)) {
-      if(i == 1) {
-        output = data.frame(first = ele[[i]][1], second = ele[[i]][2])
-      } else {
-        output = rbind(output, data.frame(first = ele[[i]][1], second = ele[[i]][2]))
-      }
-    }
-    output
-  } else {
-    0
-  }
-})
-# remove(bigrams)
+
 
 #####
 # ISSUES:
